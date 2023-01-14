@@ -55,6 +55,14 @@ class web_routes
             'method' => 'get',
             'middleware' => 'anyone',
         ),
+        "delete" => array (
+            'route' => '/delete',
+            'file' => 'app/controllers/DeleteController.php',
+            'class' => 'App\Controllers\DeleteController',
+            'function' => 'index',
+            'method' => 'post',
+            'middleware' => 'anyone',
+        ),
     ];
 
     public static function FindRoute($route){

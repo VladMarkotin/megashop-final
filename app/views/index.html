@@ -8,6 +8,7 @@
             <th>Id</th>
             <th>Name</th>
             <th>Price</th>
+            <th></th>
         </tr>
         {%for key,value in products %}
         
@@ -20,6 +21,7 @@
           {% endif %}
         
         {% endfor %}
+        <td><input type="checkbox" data-id="{{products[key]['id']}}"></td>
         </tr>
     {% endfor %}
     
@@ -27,7 +29,10 @@
 
    <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-    Launch demo modal
+    Add product
+  </button>
+  <button type="button" class="btn btn-danger" id="delete">
+    Delete chosen products
   </button>
   
   <!-- Modal -->

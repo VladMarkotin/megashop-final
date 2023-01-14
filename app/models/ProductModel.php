@@ -24,7 +24,7 @@ class ProductModel extends Model
 
     public function getProducts2()
     {
-        $response = $this->queryBuilder->select('products', ['*'])->get()->toArray();
+        $response = $this->queryBuilder->select(['*'])->from('products')->get()->toArray();
 
         return $response;
     }
@@ -34,6 +34,16 @@ class ProductModel extends Model
        $result = $this->queryBuilder->insertData('products', $this->fields, $data);
        
        return ($result);
+    }
+
+    public function deleteProducts(array $ids)
+    {
+        foreach ($ids as $id) {
+            $id = (int) $id;
+            $this->queryBuilder->delete('products')->where(['id', '=', $id])->execute();
+        }
+       
+        return ($result);
     }
 }
 

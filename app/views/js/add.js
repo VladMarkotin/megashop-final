@@ -13,7 +13,7 @@ $( "#form" ).submit(function( event ) {
     jsonData = {name: name, price: price}
     $.post( "add", jsonData )
         .done(function() {
-            table.append(`<tr><td data-id=`+lastId+`>` +lastId+ `</td><td>`+name+`</td><td>`+price+`</td></tr>`);
+            table.append(`<tr><td data-id=`+lastId+`>` +lastId+ `</td><td>`+name+`</td><td>`+price+`</td><td><input type="checkbox" data-id=`+ lastId +`></td></tr>`);
         }
     );
     

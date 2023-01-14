@@ -63,12 +63,21 @@ class MySQLiWrapper extends \Core\AbstractCore
      * @param array    $data здесь перечислены поля для запроса (или *)
      * @return array
      */
-    public function select($table, array $data)
+    public function select(array $data = null)
     {
         $this->query = "SELECT ";
-        $this->query .= implode(',', $data);
-        $this->query .= " FROM $table";
+        if ($data) {
+            $this->query .= implode(',', $data);
+        }
         
+        return self::$instance;
+    }
+
+    /* Вынес from чтобы была возможность добавлять агрегирующие методы*/
+    public function from($table)
+    {
+        $this->query .= " FROM $table ";
+
         return self::$instance;
     }
 
@@ -81,6 +90,15 @@ class MySQLiWrapper extends \Core\AbstractCore
      */
     public function insertData($table, array $fields, array $data)
     {
+        $_this = $this;
+        $truncateTable = function () use ($table, $_this){
+            $result = $this->select()->count('id')->as('id')->from($table)->get()->toArray();
+            if ($result[0]['id'] == 0){
+                $_this->truncate($table);
+            }
+        };
+        $truncateTable();
+
         $addFields = function ($fields) {
             $fieldsAsStr = '';
             if ($fields) {
@@ -113,12 +131,8 @@ class MySQLiWrapper extends \Core\AbstractCore
         });
         $values = array_map($func, $data);
         $query = $query. $values[count($values) - 1];
-        //die( mb_substr($query, 0, -1));
         $this->query = mb_substr($query, 0, -1);
-        //$msc = $this->startTimer();
-        //die($this->query);
         self::query($this->query);
-       // $this->endTimer($msc);
     }
 
     /**
@@ -148,7 +162,23 @@ class MySQLiWrapper extends \Core\AbstractCore
     {
         $this->query = "DELETE FROM $table ";
 
-        return self::$wrapper;
+        return self::$instance;
+    }
+
+    //Агрегирующие методы
+
+    public function count($field)
+    {
+        $this->query .= " COUNT($field) ";
+
+        return self::$instance;
+    }
+
+    public function as($as)
+    {
+        $this->query .= " AS $as ";
+
+        return self::$instance;
     }
 
     //-----------------------------------------------
@@ -158,7 +188,9 @@ class MySQLiWrapper extends \Core\AbstractCore
         $this->query .= " WHERE ";
         foreach($data as $i => $v){
             if(is_string($v) && (!in_array($v, ['>','<', '=', '>=', '<=', '<>'] )) && ($i != 0)) {
-                $v = "'$v' ";
+                if (is_string($v)) {
+                    $v = "'$v' ";
+                }
             }
             $this->query .= $v;
         }
@@ -235,7 +267,7 @@ class MySQLiWrapper extends \Core\AbstractCore
     //Посмотреть получившийся запрос
     public function getSQL()
     {
-        return $this->query;
+        die( $this->query);
     }
     //----------------- Конец -----------------------
 
