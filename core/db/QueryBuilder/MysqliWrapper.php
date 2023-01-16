@@ -142,20 +142,22 @@ class MySQLiWrapper extends \Core\AbstractCore
      * @param array    $data здесь перечислены данные для обновления в формате [поле => значение]
      * @return array
      */
-    public function update($table, array $data)
+    public function update($table, array $fields, array $data)
     {
         $this->query = "UPDATE $table SET ";
         foreach($data as $i => $v){
-            if(array_key_last($data) != $i){
-                $this->query .= "$i = ";//
-                $this->query .= is_string($v) ?   "'$v'," : "$v,";
-            }else{
-                $this->query .= "$i = ";//
-                $this->query .= is_string($v) ?   "'$v'" : "$v";
+            if (in_array($i, $fields)) {
+                if(array_key_last($data) != $i){
+                    $this->query .= "$i = ";//
+                    $this->query .= is_string($v) ?   "'$v'," : "$v,";
+                }else{
+                    $this->query .= "$i = ";//
+                    $this->query .= is_string($v) ?   "'$v'" : "$v";
+                }
             }
         }
         //die($this->query);
-        return self::$wrapper;
+        return self::$instance;
     }
     
     public function delete($table)
@@ -174,6 +176,21 @@ class MySQLiWrapper extends \Core\AbstractCore
         return self::$instance;
     }
 
+    public function sum($field)
+    {
+        $this->query .= " SUM($field) ";
+
+        return self::$instance;
+    }
+
+    public function avg($field)
+    {
+        $this->query .= " AVG($field) ";
+
+        return self::$instance;
+    }
+
+    //добавляет псевдоним для столбца
     public function as($as)
     {
         $this->query .= " AS $as ";

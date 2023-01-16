@@ -29,9 +29,30 @@ class ProductModel extends Model
         return $response;
     }
 
+    public function getSum()
+    {
+        $response = $this->queryBuilder->select()->sum('price')
+                    ->as('sum')
+                    ->from('products')
+                    ->get()
+                    ->toArray();
+
+        return $response;
+    }
+
     public function addProduct(array $data)
     {
        $result = $this->queryBuilder->insertData('products', $this->fields, $data);
+       
+       return ($result);
+    }
+
+    public function updateProduct(array $data)
+    {
+        $result = $this->queryBuilder->update('products', ['name', 'price'] ,$data)
+                    ->where(['id', '=' , $data['id'] ])
+                    //->getSQL()
+                    ->execute();
        
        return ($result);
     }

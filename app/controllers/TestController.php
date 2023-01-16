@@ -20,7 +20,7 @@ class TestController extends Controller
     {
         //$products = $this->testModel->getProducts();
         //$products = $this->testModel->getProducts2();
-        $products = $this->testModel->getPriceSum();
-        $this->display('test.html', $products);
+        $sum = $this->productModel->getSum();
+        $this->display('test.html', $sum);
     }
 }

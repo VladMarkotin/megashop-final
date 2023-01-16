@@ -55,6 +55,14 @@ class web_routes
             'method' => 'get',
             'middleware' => 'anyone',
         ),
+        "edit" => array (
+            'route' => '/edit',
+            'file' => 'app/controllers/EditController.php',
+            'class' => 'App\Controllers\EditController',
+            'function' => 'index',
+            'method' => 'post',
+            'middleware' => 'anyone',
+        ),
         "delete" => array (
             'route' => '/delete',
             'file' => 'app/controllers/DeleteController.php',
